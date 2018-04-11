@@ -2,15 +2,13 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { Grid } from 'semantic-ui-react'
 import Login from '../login/Login'
-import Header from '../shared/components/header/Header'
+import Header from '../components/header/Header'
 import Home from '../home/Home'
 import './App.css'
 
 class App extends Component {
   constructor (props) {
     super(props)
-    console.log({ props })
-
   }
 
   render() {

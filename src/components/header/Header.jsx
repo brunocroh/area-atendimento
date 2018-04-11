@@ -1,30 +1,26 @@
 import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 class Header extends Component {
   
   constructor (props) {
     super(props)
-    let { history } = this.props
-    console.log(history)
-
   }
 
   render() {
+    let { history } = this.props
+
     return (
        <Menu pointing secondary>
-        <Link to="/home">Home</Link>
-        <Link to="/login">Login</Link>
-        <Menu.Item name='home' />
-        <Menu.Item name='messages' />
-        <Menu.Item name='friends' />
+        <Menu.Item name='Home' onClick={() => history.push('/home')} />
         <Menu.Menu position='right'>
-          <Menu.Item name='logout' />
+          <Menu.Item name='Login' onClick={() => history.push('/login')} />
         </Menu.Menu>
       </Menu>
     );
   }
 }
 
-export default Header
+export default withRouter (Header)
