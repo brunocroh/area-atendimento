@@ -1,9 +1,15 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { 
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect
+} from 'react-router-dom'
 import { Grid } from 'semantic-ui-react'
-import Login from '../login/Login'
-import Header from '../components/header/Header'
-import Home from '../home/Home'
+import Login from 'app/login/Login'
+import Header from 'components/header/Header'
+import Home from 'app/home/Home'
 import './App.css'
 
 class App extends Component {
@@ -18,12 +24,11 @@ class App extends Component {
           <Grid.Row>
             <Header {...this.props}/>
           </Grid.Row>
-
-          <Grid.Row>
+          <Switch>
             <Route path='/home' component={Home}></Route>
             <Route path='/login' component={Login}></Route>
-          </Grid.Row>
-
+            <Redirect path='/' exact to='/home'></Redirect>
+          </Switch>
           <Grid.Row>
             Footer
           </Grid.Row>
