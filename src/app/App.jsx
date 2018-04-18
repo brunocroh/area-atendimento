@@ -7,7 +7,7 @@ import {
   Redirect
 } from 'react-router-dom'
 import { Grid } from 'semantic-ui-react'
-import Login from 'app/login/Login'
+import Cadastro from 'app/login/Cadastro'
 import Header from 'components/header/Header'
 import Home from 'app/home/Home'
 import './App.css'
@@ -26,7 +26,7 @@ class App extends Component {
           </Grid.Row>
           <Switch>
             <Route path='/home' component={Home}></Route>
-            <Route path='/login' component={Login}></Route>
+            <Route path='/login' component={Cadastro}></Route>
             <Redirect path='/' exact to='/home'></Redirect>
           </Switch>
           <Grid.Row>
