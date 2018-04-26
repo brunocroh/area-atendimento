@@ -16,7 +16,7 @@ class Header extends Component {
        <Menu pointing secondary>
         <Menu.Item name='Home' onClick={() => history.push('/home')} />
         <Menu.Menu position='right'>
-          <Menu.Item name='Login' onClick={() => history.push('/login')} />
+          <Menu.Item name='Login' onClick={() => history.push('auth')} />
         </Menu.Menu>
       </Menu>
     );

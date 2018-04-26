@@ -2,39 +2,24 @@ import React, { Component } from 'react'
 import { 
   BrowserRouter as Router,
   Route,
-  Link,
   Switch,
   Redirect
 } from 'react-router-dom'
-import { Grid } from 'semantic-ui-react'
-import Cadastro from 'app/login/Cadastro'
-import Header from 'components/header/Header'
-import Home from 'app/home/Home'
 import './App.css'
+import Public from './public'
+import Panel from './panel'
 
 class App extends Component {
-  constructor (props) {
-    super(props)
-  }
-
-  render() {
+  render () {
     return (
       <Router>
-        <div>
-          <Grid.Row>
-            <Header {...this.props}/>
-          </Grid.Row>
-          <Switch>
-            <Route path='/home' component={Home}></Route>
-            <Route path='/login' component={Cadastro}></Route>
-            <Redirect path='/' exact to='/home'></Redirect>
-          </Switch>
-          <Grid.Row>
-            Footer
-          </Grid.Row>
-        </div>
+        <Switch>
+          <Route path='/public' component={Public}></Route>
+          <Route path='/panel' component={Panel}></Route>
+          <Redirect path='*' to='/public' />
+        </Switch>
       </Router>
-    );
+    )
   }
 }
 

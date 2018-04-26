@@ -20,8 +20,6 @@ class Cadastro extends Component {
     console.log(values)
   }
 
-
-
   render () {
     return (
       <Formik
