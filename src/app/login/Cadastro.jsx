@@ -1,84 +1,147 @@
 import React, { Component } from 'react'
-import { Grid, Input, Container, Button }  from 'semantic-ui-react'
+import { Grid, Header, Divider, Input, Container, Button }  from 'semantic-ui-react'
 import firebase from 'firebase'
+import { Formik } from 'formik'
 
 class Cadastro extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      nome: '',
-      email: '',
-      senha: '',
-      confirmaSenha: ''
+      initialValues: {
+        nome: '',
+        email: '',
+        senha: '',
+        confirmaSenha: ''
+      }
     }
-
-    this.handleInputChange =
-    this.handleInputChange.bind(this)
-
   }
 
-  handleInputChange (event) {
-    const value = event.target.value
-    const name = event.target.name
-
-    this.setState({
-      [name]: value
-    })
-
+  submitForm ({values}) {
+    console.log(values)
   }
 
-  render() {
+
+
+  render () {
     return (
-      <Container fluid>
-        <Grid columns={16}>
-          <Grid.Row centered>
-            <Grid.Column width={4}>
-              <label>Nome
-                <Input 
-                  name='nome' 
-                  fluid
-                  onChange={this.handleInputChange} />
-              </label>
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <label>Email
-                <Input 
-                  name='email' 
-                  type='email'
-                  fluid 
-                  onChange={this.handleInputChange} />
-              </label>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row centered>
-            <Grid.Column width={4}>
-              <label>Senha
-                <Input 
-                  name='senha' 
-                  type='password' 
-                  fluid onChange={this.handleInputChange} />
-              </label>
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <label>Confirmar Senha
-                <Input 
-                  name='confirmaSenha' 
-                  type='password' 
-                  fluid
-                  fluid onChange={this.handleInputChange} />
-              </label>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row centered>
-            <Grid.Column  width={8}>
-              <Button fluid primary>Cadastrar</Button>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+      <Formik
+        initialValues={this.state.initialValues}
+        onSubmit={this.submitForm}
+        render={({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur
+        }) => (
+          <Container fluid>
+            <Grid verticalAlign='middle' style={{height: '100vh'}}>
+              <Grid centered columns={4}>
+                <Grid.Column mobile={4}>
+                  <Grid.Row textAlign='center'>
+                    <Header as='h2'>Quero me Cadastrar!</Header>
+                  </Grid.Row>
+                  <br/>
+                  <Grid.Row>
+                    <Grid.Column mobile={4}>
+                      <label>Nome
+                        <Input
+                          name='nome'
+                          value={values.nome}
+                          fluid
+                          onChange={handleChange} />
+                      </label>
+                      <label>{values.nome}</label>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column mobile={4}>
+                      <label>Email
+                        <Input
+                          name='email'
+                          type='email'
+                          value={values.email}
+                          fluid
+                          onChange={handleChange} />
+                      </label>
+                      <label>{values.email}</label>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column mobile={4}>
+                      <label>Senha
+                        <Input
+                          name='senha'
+                          type='password'
+                          value={values.senha}
+                          fluid
+                          onChange={handleChange} />
+                      </label>
+                      <label>{values.senha}</label>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column mobile={4}>
+                      <label>Confirmar Senha
+                        <Input
+                          name='confirmaSenha'
+                          type='password'
+                          value={values.confirmaSenha}
+                          fluid
+                          onChange={handleChange} />
+                      </label>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <br/>
+                  <Grid.Row>
+                    <Grid.Column mobile={4}>
+                      <Button fluid><i className="far fa-envelope"></i> Cadastrar com Email</Button>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid.Column>
+                <Divider vertical style={{left: '50%'}}>Or</Divider>
+                <Grid.Column mobile={4}>
+                  <Header as='h2'>Ja sou cadastrado!</Header>
+                  <Grid.Row>
+                    <Grid.Column mobile={4}>
+                      <label>Email
+                        <Input
+                          name='email'
+                          type='email'
+                          value={values.email}
+                          fluid
+                          onChange={handleChange} />
+                      </label>
+                      <label>{values.email}</label>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column mobile={4}>
+                      <label>Senha
+                        <Input
+                          name='senha'
+                          type='password'
+                          value={values.senha}
+                          fluid
+                          onChange={handleChange} />
+                      </label>
+                      <label>{values.senha}</label>
+                      <br/>
+                      <Grid.Row>
+                        <Grid.Column mobile={4}>
+                          <Button fluid primary>Entrar</Button>
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid.Column>
+              </Grid>
+            </Grid>
+          </Container>
+        )}>
+      </Formik>
     )
   }
-
 }
 
 export default Cadastro
