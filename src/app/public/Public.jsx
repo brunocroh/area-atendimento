@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom'
 import { Grid } from 'semantic-ui-react'
 import Header from 'components/header/Header'
-import Cadastro from './Cadastro'
+import Auth from './Auth'
 import Home from './Home'
 
 class Public extends Component {
@@ -21,7 +21,7 @@ class Public extends Component {
         </Grid.Row>
         <Switch>
           <Route path={`${match.url}/home`} component={Home}></Route>
-          <Route path={`${match.url}/auth`} component={Cadastro}></Route>
+          <Route path={`${match.url}/auth`} component={Auth}></Route>
           <Redirect path='/public' to={`${match.url}/home`} />
         </Switch>
         <Grid.Row>

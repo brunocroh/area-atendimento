@@ -3,7 +3,7 @@ import { Grid, Header, Divider, Input, Container, Button }  from 'semantic-ui-re
 import firebase from 'firebase'
 import { Formik } from 'formik'
 
-class Cadastro extends Component {
+class Auth extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -11,7 +11,9 @@ class Cadastro extends Component {
         nome: '',
         email: '',
         senha: '',
-        confirmaSenha: ''
+        confirmaSenha: '',
+        emaillogin: '',
+        senhalogin: ''
       }
     }
   }
@@ -49,7 +51,6 @@ class Cadastro extends Component {
                           fluid
                           onChange={handleChange} />
                       </label>
-                      <label>{values.nome}</label>
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
@@ -62,7 +63,6 @@ class Cadastro extends Component {
                           fluid
                           onChange={handleChange} />
                       </label>
-                      <label>{values.email}</label>
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
@@ -75,7 +75,6 @@ class Cadastro extends Component {
                           fluid
                           onChange={handleChange} />
                       </label>
-                      <label>{values.senha}</label>
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
@@ -93,7 +92,7 @@ class Cadastro extends Component {
                   <br/>
                   <Grid.Row>
                     <Grid.Column mobile={4}>
-                      <Button fluid><i className="far fa-envelope"></i> Cadastrar com Email</Button>
+                      <Button type='submit' fluid><i className="far fa-envelope"></i> Cadastrar com Email</Button>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid.Column>
@@ -104,26 +103,24 @@ class Cadastro extends Component {
                     <Grid.Column mobile={4}>
                       <label>Email
                         <Input
-                          name='email'
+                          name='emaillogin'
                           type='email'
-                          value={values.email}
+                          value={values.emaillogin}
                           fluid
                           onChange={handleChange} />
                       </label>
-                      <label>{values.email}</label>
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
                     <Grid.Column mobile={4}>
                       <label>Senha
                         <Input
-                          name='senha'
+                          name='senhalogin'
                           type='password'
-                          value={values.senha}
+                          value={values.senhalogin}
                           fluid
                           onChange={handleChange} />
                       </label>
-                      <label>{values.senha}</label>
                       <br/>
                       <Grid.Row>
                         <Grid.Column mobile={4}>
@@ -142,4 +139,4 @@ class Cadastro extends Component {
   }
 }
 
-export default Cadastro
+export default Auth
