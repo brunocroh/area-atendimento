@@ -11,13 +11,29 @@ import Auth from './Auth'
 import Home from './Home'
 
 class Public extends Component {
+  constructor (props) {
+    super(props)
+
+    const { history } = props
+
+    this.state = {
+      menuItens: [
+        {
+          name: 'Login',
+          onClick: () => history.push('/public/auth')
+        }
+      ]
+    }
+  }
+
   render () {
     const { match } = this.props
+    const { menuItens } = this.state
 
     return (
       <div>
         <Grid.Row>
-          <Header {...this.props}/>
+          <Header menuItens={menuItens}/>
         </Grid.Row>
         <Switch>
           <Route path={`${match.url}/home`} component={Home}></Route>

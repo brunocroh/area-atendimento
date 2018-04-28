@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import { Grid, Header, Divider, Input, Container, Button }  from 'semantic-ui-react'
-import firebase from 'firebaseInstance'
+import { Grid, Header, Divider, Input, Container, Button } from 'semantic-ui-react'
 import { Formik } from 'formik'
+import firebase from 'utils/firebase'
+import { connect } from 'utils/context'
+import history from 'utils/history'
+import messages from 'constants/messages.json'
 
 class Auth extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      user: props.state.user,
       initialValuesCadastro: {
         nome: '',
         email: '',
@@ -26,15 +30,30 @@ class Auth extends Component {
     this.submitFormLogin.bind(this)
   }
 
-  submitFormCadastro (values) {
-    firebase.auth().createUserWithEmailAndPassword(values.email, values.senha)
+  componentWillMount () {
+    const { user } = this.props.state
+    if (user.loggedIn) {
+      console.log({ history })
+      history.replace('/panel')
+    }
   }
 
-  submitFormLogin (values) {
-    console.log(values)
+  submitFormCadastro (values) {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(values.email, values.senha)
+  }
+
+  submitFormLogin (values, { setFieldError }) {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(values.email, values.senha)
+      .then((user) => console.log(user))
+      .catch((err) => setFieldError('senha', messages[err.code]))
   }
 
   render () {
+    console.log({state: this.props.state})
     return (
       <Container fluid>
         <Grid verticalAlign='middle' style={{height: '100vh'}}>
@@ -91,7 +110,7 @@ class Auth extends Component {
                         </label>
                       </Grid.Column>
                     </Grid.Row>
-                    <Grid.Row>
+                    {/* <Grid.Row>
                       <Grid.Column mobile={4}>
                         <label>Confirmar Senha
                           <Input
@@ -102,7 +121,7 @@ class Auth extends Component {
                             onChange={handleChange} />
                         </label>
                       </Grid.Column>
-                    </Grid.Row>
+                    </Grid.Row> */}
                     <br/>
                     <Grid.Row>
                       <Grid.Column mobile={4}>
@@ -113,7 +132,7 @@ class Auth extends Component {
                 )}>
               </Formik>
             </Grid.Column>
-            <Divider vertical style={{left: '50%'}}>Or</Divider>
+            <Divider vertical style={{left: '50%'}}>OU</Divider>
             <Grid.Column mobile={4}>
               <Formik
                 initialValues={this.state.initialValuesLogin}
@@ -150,6 +169,7 @@ class Auth extends Component {
                             fluid
                             onChange={handleChange} />
                         </label>
+                        {errors.senha && touched.senha && <label style={{color: 'red'}}>{errors.senha}</label>}
                         <br/>
                         <Grid.Row>
                           <Grid.Column mobile={4}>
@@ -169,4 +189,4 @@ class Auth extends Component {
   }
 }
 
-export default Auth
+export default connect()(Auth)
