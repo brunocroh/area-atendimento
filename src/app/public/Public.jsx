@@ -6,7 +6,7 @@ import {
   Redirect
 } from 'react-router-dom'
 import { Grid } from 'semantic-ui-react'
-import Header from 'components/header/Header'
+import Header from 'components/header'
 import Auth from './Auth'
 import Home from './Home'
 

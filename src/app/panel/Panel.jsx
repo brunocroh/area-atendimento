@@ -1,10 +1,32 @@
 import React, { Component } from 'react'
-import firebase from 'firebase'
+import Header from 'components/header'
+import history from 'utils/history'
+import firebase from 'utils/firebase'
 
 class Panel extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      menuItens: [
+        {
+          name: 'Sair',
+          onClick: () => {
+            firebase.auth().signOut()
+              .then(() => console.log('Deslogado'))
+          }
+        }
+      ]
+    }
+  }
   render () {
+    const { menuItens } = this.state
+
     return (
-      <h2>Panel</h2>
+      <div>
+        <Header menuItens={menuItens}></Header>
+        <h2>Panel</h2>
+      </div>
     )
   }
 }
