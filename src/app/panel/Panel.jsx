@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Header from 'components/header'
 import history from 'utils/history'
 import firebase from 'utils/firebase'
+import AreaDeCobertura from './AreaDeCobertura'
 
 class Panel extends Component {
   constructor (props) {
@@ -26,6 +27,7 @@ class Panel extends Component {
       <div>
         <Header menuItens={menuItens}></Header>
         <h2>Panel</h2>
+        <AreaDeCobertura/>
       </div>
     )
   }
