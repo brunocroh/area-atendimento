@@ -26,7 +26,6 @@ class Panel extends Component {
     return (
       <div>
         <Header menuItens={menuItens}></Header>
-        <h2>Panel</h2>
         <AreaDeCobertura/>
       </div>
     )
