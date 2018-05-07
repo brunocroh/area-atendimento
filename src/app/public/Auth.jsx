@@ -48,7 +48,7 @@ class Auth extends Component {
     firebase
       .auth()
       .signInWithEmailAndPassword(values.email, values.senha)
-      .then((user) => console.log(user))
+      .then((user) => history.push('/panel'))
       .catch((err) => setFieldError('senha', messages[err.code]))
   }
 

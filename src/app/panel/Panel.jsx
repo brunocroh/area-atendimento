@@ -14,7 +14,7 @@ class Panel extends Component {
           name: 'Sair',
           onClick: () => {
             firebase.auth().signOut()
-              .then(() => console.log('Deslogado'))
+              .then(() => history.replace('/public/home'))
           }
         }
       ]
