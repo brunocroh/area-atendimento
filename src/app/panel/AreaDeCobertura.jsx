@@ -5,7 +5,8 @@ import L from 'leaflet'
 
 const stages = {
   ADDRESS_INPUT: 'ADDRESS_INPUT',
-  MAP_DRAW: 'MAP_DRAW'
+  SET_LOCATION: 'SET_LOCATION',
+  POLYGON_DRAW: 'POLYGON_DRAW'
 }
 
 class AreaDeCobertura extends Component {
@@ -20,13 +21,16 @@ class AreaDeCobertura extends Component {
     }
 
     this.initSearchbox = this.initSearchbox.bind(this)
+    this.setLocation = this.setLocation.bind(this)
+    this.confirmSetLocation = this.confirmSetLocation.bind(this)
+    this.onMapClickSetLocation = this.onMapClickSetLocation.bind(this)
   }
 
   componentDidMount () {
     if (window.google && window.google.maps) {
       let element = ReactDOM.findDOMNode(this)
       switch (this.state.stage) {
-        case stages.MAP_DRAW:
+        case stages.SET_LOCATION:
           this.InitMap(element)
           break
         case stages.ADDRESS_INPUT:
@@ -38,13 +42,11 @@ class AreaDeCobertura extends Component {
 
   componentDidUpdate () {
     if (this.state.endereco.gmaps &&
-      this.state.stage !== stages.MAP_DRAW) {
-      let element = ReactDOM.findDOMNode(this)
-
+      this.state.stage !== stages.SET_LOCATION) {
       this.setState((prevState) => ({
         ...prevState,
-        stage: stages.MAP_DRAW
-      }), (teste) => this.InitMap(element, this.getOptionsOfMap(this.state.endereco.gmaps)))
+        stage: stages.SET_LOCATION
+      }), (teste) => this.setLocation(this.getOptionsOfMap(this.state.endereco.gmaps)))
     }
   }
 
@@ -58,15 +60,10 @@ class AreaDeCobertura extends Component {
     }
   }
 
-  InitMap (element, {center, location}) {
+  initMap ({ lat, lng }) {
     let map = new L.Map('map', {
-      center: new L.LatLng(center.lat, center.lng),
+      center: new L.LatLng(lat, lng),
       zoom: 17
-    })
-
-    map.on('click', (e) => {
-      map.removeLayer(marker)
-      marker = L.marker(Object.values(e.latlng)).addTo(map)
     })
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYnJ1bm9jcm9oIiwiYSI6ImNqZ3ZnZnQ1dTB6YjAzM21ydzVjbnlseGwifQ.Fo2V-EKrplRKdQF45QZJ8w', {
@@ -75,9 +72,27 @@ class AreaDeCobertura extends Component {
       accessToken: 'pk.eyJ1IjoiYnJ1bm9jcm9oIiwiYSI6ImNqZ3ZnZnQ1dTB6YjAzM21ydzVjbnlseGwifQ.Fo2V-EKrplRKdQF45QZJ8w'
     }).addTo(map)
 
-    let marker = L.marker([center.lat, center.lng]).addTo(map)
-
     return map
+  }
+
+  setLocation ({ center, location }) {
+    let map = this.initMap({
+      lat: center.lat,
+      lng: center.lng
+    })
+
+    let marker = L.marker([center.lat, center.lng]).addTo(map)
+    this.setState((old) => ({...old, marker, map}))
+
+    map.on('click', this.onMapClickSetLocation)
+  }
+
+  onMapClickSetLocation (event) {
+    let { map, marker } = this.state
+
+    map.removeLayer(this.state.marker)
+    marker = L.marker(Object.values(event.latlng)).addTo(map)
+    this.setState((old) => ({...old, marker, mapClickEvent: event.originalEvent}))
   }
 
   initSearchbox (element) {
@@ -102,14 +117,19 @@ class AreaDeCobertura extends Component {
     return searchBox
   }
 
+  confirmSetLocation () {
+    const { map } = this.state
+    map.off('click', this.onMapClickSetLocation)
+  }
+
   render () {
     switch (this.state.stage) {
-      case stages.MAP_DRAW:
+      case stages.SET_LOCATION:
         return (
           <div>
             <Header as='h2'>Selecione a Localizacao exata do seu ponto de atendimento</Header>
             <div id='map' style={{height: '400px', width: '75%'}}></div>
-            <Button primary>Confirmar Localizacao</Button>
+            <Button onClick={this.confirmSetLocation}>Confirmar Localizacao</Button>
           </div>
         )
       case stages.ADDRESS_INPUT:
