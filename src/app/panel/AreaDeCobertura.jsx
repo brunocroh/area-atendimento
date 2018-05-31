@@ -6,7 +6,7 @@ import L from 'leaflet'
 const stages = {
   ADDRESS_INPUT: 'ADDRESS_INPUT',
   SET_LOCATION: 'SET_LOCATION',
-  POLYGON_DRAW: 'POLYGON_DRAW'
+  DRAW_POLYGON: 'DRAW_POLYGON'
 }
 
 class AreaDeCobertura extends Component {
@@ -17,13 +17,15 @@ class AreaDeCobertura extends Component {
       endereco: {
         gmaps: null
       },
-      stage: stages.ADDRESS_INPUT
+      stage: stages.ADDRESS_INPUT,
+      polygonPoints: []
     }
 
     this.initSearchbox = this.initSearchbox.bind(this)
     this.setLocation = this.setLocation.bind(this)
     this.confirmSetLocation = this.confirmSetLocation.bind(this)
     this.onMapClickSetLocation = this.onMapClickSetLocation.bind(this)
+    this.onMapClickDrawPolygon = this.onMapClickDrawPolygon.bind(this)
   }
 
   componentDidMount () {
@@ -42,7 +44,8 @@ class AreaDeCobertura extends Component {
 
   componentDidUpdate () {
     if (this.state.endereco.gmaps &&
-      this.state.stage !== stages.SET_LOCATION) {
+      this.state.stage !== stages.SET_LOCATION &&
+      this.state.stage !== stages.DRAW_POLYGON) {
       this.setState((prevState) => ({
         ...prevState,
         stage: stages.SET_LOCATION
@@ -87,17 +90,29 @@ class AreaDeCobertura extends Component {
     map.on('click', this.onMapClickSetLocation)
   }
 
+  onMapClickDrawPolygon (event) {
+    let { map, polygon, polygonPoints } = this.state
+
+    if (polygon) {
+      polygon.remove()
+    }
+    polygonPoints.push(event.latlng)
+    polygon = L.polygon(polygonPoints)
+    map.addLayer(polygon)
+    this.setState((old) => ({...old, polygon, polygonPoints, mapClickEvent: event.originalEvent}))
+  }
+
   onMapClickSetLocation (event) {
     let { map, marker } = this.state
 
-    map.removeLayer(this.state.marker)
+    map.removeLayer(marker)
     marker = L.marker(Object.values(event.latlng)).addTo(map)
     this.setState((old) => ({...old, marker, mapClickEvent: event.originalEvent}))
   }
 
   initSearchbox (element) {
     let searchBox = new window.google.maps.places.SearchBox(
-      element.querySelector('.searchLocation Input')
+      element.querySelector('.searchLocation input')
     )
 
     searchBox.addListener('places_changed', () => {
@@ -120,16 +135,29 @@ class AreaDeCobertura extends Component {
   confirmSetLocation () {
     const { map } = this.state
     map.off('click', this.onMapClickSetLocation)
+    map.on('click', this.onMapClickDrawPolygon)
+
+    this.setState(state => ({...state, stage: stages.DRAW_POLYGON}))
   }
 
   render () {
     switch (this.state.stage) {
       case stages.SET_LOCATION:
         return (
-          <div>
+          <div style={{alignText: 'center', margin: '100px auto', height: '600px', width: '75%'}}>
             <Header as='h2'>Selecione a Localizacao exata do seu ponto de atendimento</Header>
-            <div id='map' style={{height: '400px', width: '75%'}}></div>
-            <Button onClick={this.confirmSetLocation}>Confirmar Localizacao</Button>
+            <div id='map' style={{height: '400px'}}></div>
+            <br/>
+            <Button primary style={{float: 'right'}} onClick={this.confirmSetLocation}>Confirmar localizacao</Button>
+          </div>
+        )
+      case stages.DRAW_POLYGON:
+        return (
+          <div style={{margin: '100px auto', height: '600px', width: '75%'}}>
+            <Header as='h2'>Desenhe sua regiao de atendimento</Header>
+            <div id='map' style={{height: '400px'}}></div>
+            <br/>
+            <Button primary style={{float: 'right'}} onClick={this.confirmDrawMap}>Confirmar regiao de atendimento</Button>
           </div>
         )
       case stages.ADDRESS_INPUT:
