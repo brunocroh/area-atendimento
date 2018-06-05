@@ -163,7 +163,7 @@ class AreaDeCobertura extends Component {
       case stages.ADDRESS_INPUT:
       default:
         return (
-          <div>
+          <div style={{margin: '100px auto', height: '600px', width: '75%'}}>
             <Header as='h2'>Digite o endereco do seu ponto de atendimento</Header>
             <Input fluid className='searchLocation' type="text" placeholder='Digite um endereco'/>
           </div>
