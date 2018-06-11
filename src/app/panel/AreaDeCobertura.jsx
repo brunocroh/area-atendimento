@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Input, Header } from 'semantic-ui-react'
 import ReactDOM from 'react-dom'
+import history from 'utils/history'
 import L from 'leaflet'
 
 const stages = {
@@ -130,6 +131,10 @@ class AreaDeCobertura extends Component {
     })
 
     return searchBox
+  }
+
+  confirmDrawMap () {
+    history.push('/panel/salvar-area')
   }
 
   confirmSetLocation () {
