@@ -16,7 +16,10 @@ class SalvarAreaCobertura extends Component {
         verificarCoberturaError: '',
         mostrarPontoAtendimento: false,
         mostrarRegiaoAtendimento: false,
-        coletarInformacoes: true
+        coletarInformacoes: true,
+        idDiv: '',
+        mapWidth: '',
+        mapHeight: ''
       },
       saved: false
     }
@@ -143,6 +146,35 @@ class SalvarAreaCobertura extends Component {
                   id='descricao'
                   onChange={this.handleInput}
                   value={configuracao ? configuracao.descricao : ''}
+                  fluid/>
+              </label>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={3}>
+            <Grid.Column width={3}>
+              <label>ID html para renderizar o mapa
+                <Input
+                  id='idDiv'
+                  onChange={this.handleInput}
+                  value={configuracao ? configuracao.idDiv : ''}
+                  fluid/>
+              </label>
+            </Grid.Column>
+            <Grid.Column width={3}>
+              <label>Largura do Mapa
+                <Input
+                  id='mapWidth'
+                  onChange={this.handleInput}
+                  value={configuracao ? configuracao.mapWidth : ''}
+                  fluid/>
+              </label>
+            </Grid.Column>
+            <Grid.Column width={3}>
+              <label>Altura do mapa
+                <Input
+                  id='mapHeight'
+                  onChange={this.handleInput}
+                  value={configuracao ? configuracao.mapHeight : ''}
                   fluid/>
               </label>
             </Grid.Column>
