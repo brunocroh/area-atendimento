@@ -53,7 +53,6 @@ class Auth extends Component {
   }
 
   render () {
-    console.log({state: this.props.state})
     return (
       <Container fluid>
         <Grid verticalAlign='middle' style={{height: '100vh'}}>

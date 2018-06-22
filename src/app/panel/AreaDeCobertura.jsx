@@ -3,6 +3,8 @@ import { Button, Input, Header } from 'semantic-ui-react'
 import ReactDOM from 'react-dom'
 import history from 'utils/history'
 import L from 'leaflet'
+import { connect } from 'utils/context'
+import firebase, { db } from 'utils/firebase'
 
 const stages = {
   ADDRESS_INPUT: 'ADDRESS_INPUT',
@@ -15,16 +17,19 @@ class AreaDeCobertura extends Component {
     super(props)
 
     this.state = {
+      configuracao: {},
       endereco: {
         gmaps: null
       },
       stage: stages.ADDRESS_INPUT,
-      polygonPoints: []
+      polygonPoints: [],
+      ...props.state
     }
 
     this.initSearchbox = this.initSearchbox.bind(this)
     this.setLocation = this.setLocation.bind(this)
     this.confirmSetLocation = this.confirmSetLocation.bind(this)
+    this.confirmDrawMap = this.confirmDrawMap.bind(this)
     this.onMapClickSetLocation = this.onMapClickSetLocation.bind(this)
     this.onMapClickDrawPolygon = this.onMapClickDrawPolygon.bind(this)
   }
@@ -134,6 +139,25 @@ class AreaDeCobertura extends Component {
   }
 
   confirmDrawMap () {
+    const { mutate } = this.props
+    const { marker: { _latlng: { lat, lng } } } = this.state
+
+    const pontoAtendimento = {
+      lat,
+      lng
+    }
+
+    let points = this.state.polygonPoints.map(l => ({lat: l.lat, lng: l.lng}))
+
+    db.collection(this.state.user.firebaseUser.uid).doc('area-atendimento').collection('configuracoes').add({
+      points,
+      pontoAtendimento
+    }).then(docRef => {
+      mutate(draft => {
+        draft.configuracao = { uid: docRef.id }
+      })
+    })
+
     history.push('/panel/salvar-area')
   }
 
@@ -150,16 +174,16 @@ class AreaDeCobertura extends Component {
       case stages.SET_LOCATION:
         return (
           <div style={{alignText: 'center', margin: '100px auto', height: '600px', width: '75%'}}>
-            <Header as='h2'>Selecione a Localizacao exata do seu ponto de atendimento</Header>
+            <Header as='h2'>Selecione a localização exata do seu ponto de atendimento</Header>
             <div id='map' style={{height: '400px'}}></div>
             <br/>
-            <Button primary style={{float: 'right'}} onClick={this.confirmSetLocation}>Confirmar localizacao</Button>
+            <Button primary style={{float: 'right'}} onClick={this.confirmSetLocation}>Confirmar localização</Button>
           </div>
         )
       case stages.DRAW_POLYGON:
         return (
           <div style={{margin: '100px auto', height: '600px', width: '75%'}}>
-            <Header as='h2'>Desenhe sua regiao de atendimento</Header>
+            <Header as='h2'>Desenhe sua região de atendimento</Header>
             <div id='map' style={{height: '400px'}}></div>
             <br/>
             <Button primary style={{float: 'right'}} onClick={this.confirmDrawMap}>Confirmar regiao de atendimento</Button>
@@ -169,12 +193,12 @@ class AreaDeCobertura extends Component {
       default:
         return (
           <div style={{margin: '100px auto', height: '600px', width: '75%'}}>
-            <Header as='h2'>Digite o endereco do seu ponto de atendimento</Header>
-            <Input fluid className='searchLocation' type="text" placeholder='Digite um endereco'/>
+            <Header as='h2'>Digite o endereço do seu ponto de atendimento</Header>
+            <Input fluid className='searchLocation' type="text" placeholder='Digite um endereço'/>
           </div>
         )
     }
   }
 }
 
-export default AreaDeCobertura
+export default connect()(AreaDeCobertura)
