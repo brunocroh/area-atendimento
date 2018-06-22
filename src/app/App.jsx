@@ -15,7 +15,9 @@ class App extends Component {
 
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       mutate(draft => {
-        draft.user = {firebaseUser, loggedIn: !!firebaseUser}
+        if (firebaseUser) {
+          draft.user = {firebaseUser, loggedIn: !!firebaseUser}
+        }
       })
     })
   }

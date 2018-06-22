@@ -2,6 +2,7 @@ areaAtendmento = (function(){
   var configuracao = {}
   var map = {}
   var userMarker = false
+  var posUsuario = ''
 
   const config = {
     apiKey: 'AIzaSyA51Mh3I2Rg5MxdiFoffUoq-aTmJysesI8',
@@ -71,10 +72,9 @@ areaAtendmento = (function(){
         let marker = new google.maps.Marker({
           position: configuracao.pontoAtendimento,
           map: map,
-          title: configuracao.descricaO
+          title: configuracao.descricao
         });
     }
-
 
     getUserLocation(map)
     initInput(map, input)
@@ -94,9 +94,7 @@ areaAtendmento = (function(){
         lat: places.geometry.location.lat(),
         lng: places.geometry.location.lng()
       }
-
       getUserLocation(map, latlng)
-
     })
   }
 
@@ -114,8 +112,8 @@ areaAtendmento = (function(){
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
             pos = { lat: position.coords.latitude, lng: position.coords.longitude }
-            console.log({ pos })
 
+            posUsuario = pos
             userMarker = new google.maps.Marker({
               position: pos,
               map: map,
@@ -127,11 +125,12 @@ areaAtendmento = (function(){
           })
         }
       } else {
+        posUsuario = pos
         userMarker = new google.maps.Marker({
           position: pos,
           map: map,
           icon: icon 
-        });
+        })
 
         map.panTo(pos)
       }
@@ -139,6 +138,28 @@ areaAtendmento = (function(){
 
   }
 
+  function inside(point, pol) {
+    
+    let vs = configuracao.points.map(m => [m.lat, m.lng])
+    var x = posUsuario.lat, y = posUsuario.lng;
+
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i][0], yi = vs[i][1];
+        var xj = vs[j][0], yj = vs[j][1];
+
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+
+    return inside;
+  };
+
   getConfig()
+
+  return {
+    estaDentroDaArea: inside
+  }
 
 })();

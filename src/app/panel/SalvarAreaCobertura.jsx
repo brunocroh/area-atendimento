@@ -113,14 +113,42 @@ class SalvarAreaCobertura extends Component {
       .then(() => this.setState({...this.state, saved: true}))
   }
 
+  renderPre () {
+    const { configuracao, user } = this.state
+
+    if(user) {
+      return (
+        <pre>{`
+<script src="https://unpkg.com/firebase@4.12.1/firebase-app.js"></script>
+<script src="https://unpkg.com/firebase@4.12.1/firebase-firestore.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYPEEXTjqLQfJ-Cm8xz2y3Z2itDNkkIdY&libraries=places"></script>
+<script>
+  window.config = {
+    idusuario: "${user.firebaseUser.uid}",
+    idconfiguracao: "${configuracao.uid}"
+  }
+</script>
+<script src="https://rawgit.com/brunocroh/area-atendimento/master/areaAtendimento.js"></script>
+        `}</pre>
+      )
+    }
+
+    return (
+      <div></div>
+    )
+  }
+
   render () {
     const { configuracao, saved } = this.state
 
     return (
       <div style={{alignText: 'center', margin: '100px auto', height: '600px', width: '75%'}}>
-        <Modal open={saved}>
+        <Modal closeIcon onClose={() => this.setState({...this.state, saved: false})} open={saved}>
           <Modal.Content>
-            Configuracao de atendimento salva com sucesso!
+            <div>
+              {'copie e cole o seguinte codigo no seu site:'}
+              {this.renderPre()}
+            </div>
           </Modal.Content>
         </Modal>
         <Grid columns={2}>
